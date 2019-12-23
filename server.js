@@ -1,5 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
+const chalk = require("chalk");
+const cTable = require("console.table");
 
 const connection = mysql.createConnection({
   host: "localhost",
@@ -18,6 +20,17 @@ connection.connect(function(err) {
     return;
   }
   console.log("connected as id " + connection.threadID);
+
+  connection.connect(err => {
+    if (err) {
+      console.log(chalk.white.bgRed(err));
+      return;
+    }
+
+    console.log(
+      chalk.green(`Connected to db. ThreadID: ${connection.threadId}`)
+    );
+  });
 
   connection.query("SELECT * FROM role", function(err, res) {
     if (err) throw err;
@@ -48,8 +61,10 @@ function start() {
       choices: [
         "Add departments",
         "View departments",
+        "Delete departments",
         "Add roles",
         "View roles",
+        "Delete roles",
         "Add employees",
         "View employees",
         "Update employee roles",
@@ -67,12 +82,20 @@ function start() {
           viewDep();
           break;
 
+        case "Delete departments":
+          delDep();
+          break;
+
         case "Add roles":
           addRole();
           break;
 
-        case "view roles":
+        case "View roles":
           viewRole();
+          break;
+
+        case "Delete roles":
+          delRole();
           break;
 
         case "Add employees":
@@ -81,6 +104,10 @@ function start() {
 
         case "View employees":
           viewEmp();
+          break;
+
+        case "Delete employee":
+          delEmp();
           break;
 
         case "update employee roles":
@@ -93,7 +120,7 @@ function start() {
       }
     });
 }
-
+// Add department
 function addDep(data) {
   inquirer
     .prompt([
@@ -125,6 +152,7 @@ function addDep(data) {
     });
 }
 
+// View Department
 function viewDep() {
   console.log("Departments: \n");
   connection.query("SELECT * FROM department", function(error, res) {
@@ -133,6 +161,7 @@ function viewDep() {
   });
 }
 
+// Add Role
 function addRole(data) {
   inquirer
     .prompt([
@@ -177,13 +206,98 @@ function addRole(data) {
     });
 }
 
+// View Role
 function viewRole() {
-  console.log("Roles: \n");
-  connection.query("SELECT * FROM role", function(error, res) {
-    console.table(res);
+  let query = `SELECT title AS "Title" FROM role`;
+  connection.query(query, (err, results) => {
+    if (err) throw err;
+    console.log(" ");
+    console.table(chalk.yellow("All Roles"), results);
     start();
   });
 }
+
+// ==============Bonus!!!===============================================
+
+// Delete Department
+function delDep() {
+  let query = `SELECT * FROM department`;
+  connection.query(query, function(err, res) {
+    if (err) throw err;
+    let deptChoices = res.map(data => ({
+      value: data.id,
+      name: data.name
+    }));
+
+    inquirer
+      .prompt([
+        {
+          name: "dept",
+          type: "list",
+          message: "Choose department to delete",
+          choices: listDep
+        }
+      ])
+      .then(answers => {
+        let query = `DELETE FROM department WHERE ?`;
+        connection.query(
+          query,
+          {
+            id: answers.dept
+          },
+          function(err, res) {
+            if (err) throw err;
+            console.table(res);
+            start();
+          }
+        );
+      });
+  });
+}
+
+// Delete Role
+
+function delRole() {
+  query = `SELECT * FROM role`;
+  connection.query(query, (err, results) => {
+    if (err) throw err;
+
+    inquirer
+      .prompt([
+        {
+          name: "delRole",
+          type: "list",
+          choices: function() {
+            let choiceArray = results.map(choice => choice.title);
+            return choiceArray;
+          },
+          message: "Select a role to delete:"
+        }
+      ])
+      .then(answer => {
+        connection.query(`DELETE FROM role WHERE ? `, {
+          title: answer.delRole
+        });
+        start();
+      });
+  });
+}
+
+// Delete Employees
+
+function delEmp() {
+  inquirer.prompt([
+    {
+      name: "employeeDelete",
+      type: "input",
+      message: " To Delete an Employee, enter the Employee id"
+    }
+  ]);
+}
+
+// ==============Bonus!!!===================================================
+
+// Add Employess
 
 function addEmp(data) {
   inquirer
@@ -235,6 +349,7 @@ function viewEmp() {
     start();
   });
 }
+// Update employee roles
 
 function updateEmpRole(data) {
   inquirer
