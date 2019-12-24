@@ -14,6 +14,9 @@ The command-line application allows the user to:
 
 # Screenshots
 
+![ScreenShot-1](public/ScreenShot-1.png)
+![ScreenShot-2](public/ScreenShot-2.png)
+
 # Steps to Setup
 
 1. Clone the repo
