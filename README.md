@@ -2,7 +2,7 @@
 
 A solution for managing a company's employees using nodejs, and MySQL
 
-The command-line application allows the user to: View departments, roles, employees
+The command-line application allows the user to:
 
       + View departments, roles, employees
 
