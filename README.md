@@ -4,13 +4,15 @@ A solution for managing a company's employees using nodejs, and MySQL
 
 The command-line application allows the user to: View departments, roles, employees
 
-    . Add departments, roles, employees
+    ..* View departments, roles, employees
 
-    . Update employee roles
+    ..* Add departments, roles, employees
 
-    . Delete departments, roles, and employees
+    ..* Update employee roles
 
-# Screenshots:
+    ..* Delete departments, roles, and employees
+
+# Screenshots
 
 # Steps to Setup
 
@@ -94,7 +96,7 @@ VALUES
 
 ```
 
-4 Run Server
+4. Run Server
 
 ```bash
 node server.js
