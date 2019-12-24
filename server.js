@@ -2,55 +2,45 @@ const mysql = require("mysql");
 const inquirer = require("inquirer");
 const chalk = require("chalk");
 const cTable = require("console.table");
+const connection = require("./config/connection");
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Airbus_97",
-  database: "employeeDB"
-});
+const startScreen = [
+  "View all Employees",
+  "View all Employees by Department",
+  "View all Departments",
+  "View all Roles",
+  "Add Employee",
+  "Add Department",
+  "Add Role",
+  "Update Employee Role",
+  "Remove Employee",
+  "Remove Department",
+  "Remove Role",
+  "Exit"
+];
 
 let listDep;
 let listRoles;
 let listEmp;
 
-connection.connect(function(err) {
-  if (err) {
-    console.error("error connecting " + err.stack);
-    return;
-  }
-  console.log("connected as id " + connection.threadID);
-
-  connection.connect(err => {
-    if (err) {
-      console.log(chalk.white.bgRed(err));
-      return;
-    }
-
-    console.log(
-      chalk.green(`Connected to db. ThreadID: ${connection.threadId}`)
-    );
-  });
-
-  connection.query("SELECT * FROM role", function(err, res) {
-    if (err) throw err;
-    listRoles = res.map(role => ({ name: role.title, value: role.id }));
-  });
-  connection.query("SELECT * FROM department", function(err, res) {
-    if (err) throw err;
-    listDep = res.map(dep => ({ name: dep.name, value: dep.id }));
-  });
-
-  connection.query("SELECT * FROM employee", function(err, res) {
-    if (err) throw err;
-    listEmp = res.map(emp => ({
-      name: `${emp.first_name}${emp.last_name}`,
-      value: emp.id
-    }));
-  });
-
-  start();
+connection.query("SELECT * FROM roles", function(err, res) {
+  if (err) throw err;
+  listRoles = res.map(role => ({ name: role.title, value: role.id }));
 });
+connection.query("SELECT * FROM departments", function(err, res) {
+  if (err) throw err;
+  listDep = res.map(dep => ({ name: dep.name, value: dep.id }));
+});
+
+connection.query("SELECT * FROM employees", function(err, res) {
+  if (err) throw err;
+  listEmp = res.map(emp => ({
+    name: `${emp.first_name}${emp.last_name}`,
+    value: emp.id
+  }));
+});
+
+start();
 
 function start() {
   inquirer
@@ -381,6 +371,7 @@ function updateEmpRole(data) {
       console.log(`
         -----Employee Updated!-----
         `);
+      console.table(chalk.yellow("Updated Emπloyee"), res);
     })
     .then(function() {
       start();
