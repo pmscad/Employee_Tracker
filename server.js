@@ -100,8 +100,8 @@ function start() {
           delEmp();
           break;
 
-        case "update employee roles":
-          updateEmpRole();
+        case "Update employee roles":
+          updateRole();
           break;
 
         case "End":
@@ -248,7 +248,7 @@ function delDep() {
 // Delete Role
 
 function delRole() {
-  query = `SELECT * FROM role`;
+  let query = `SELECT * FROM role`;
   connection.query(query, (err, results) => {
     if (err) throw err;
 
@@ -341,12 +341,13 @@ function viewEmp() {
 }
 // Update employee roles
 
-function updateEmpRole(data) {
+function updateRole(data) {
+  console.log("updating emp");
   inquirer
     .prompt([
       {
         type: "list",
-        message: "Which employee would you like to update the role off?",
+        message: "Which employee would you like to update the role of?",
         name: "emp",
         choices: listEmp
       },
