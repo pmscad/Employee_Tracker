@@ -1,7 +1,7 @@
 
 -- Insert a set of records.
 INSERT INTO departments
-    (name)
+    (department_name)
 VALUES
     ('Sales'),
     ('Engineering'),

@@ -122,7 +122,7 @@ function addDep(data) {
     ])
     .then(function(res) {
       connection.query(
-        "INSERT INTO department SET ?",
+        "INSERT INTO departments SET ?",
         {
           name: res.name
         },
@@ -145,7 +145,7 @@ function addDep(data) {
 // View Department
 function viewDep() {
   console.log("Departments: \n");
-  connection.query("SELECT * FROM department", function(error, res) {
+  connection.query("SELECT * FROM departments", function(error, res) {
     console.log(res);
     start();
   });
@@ -174,7 +174,7 @@ function addRole(data) {
     ])
     .then(function(res) {
       connection.query(
-        "INSERT INTO role SET ?",
+        "INSERT INTO roles SET ?",
         {
           title: res.name,
           salary: res.salary,
@@ -211,7 +211,7 @@ function viewRole() {
 
 // Delete Department
 function delDep() {
-  let query = `SELECT * FROM department`;
+  let query = `SELECT * FROM departments`;
   connection.query(query, function(err, res) {
     if (err) throw err;
     let deptChoices = res.map(data => ({
@@ -229,7 +229,7 @@ function delDep() {
         }
       ])
       .then(answers => {
-        let query = `DELETE FROM department WHERE ?`;
+        let query = `DELETE FROM departments WHERE ?`;
         connection.query(
           query,
           {
@@ -248,7 +248,7 @@ function delDep() {
 // Delete Role
 
 function delRole() {
-  let query = `SELECT * FROM role`;
+  let query = `SELECT * FROM roles`;
   connection.query(query, (err, results) => {
     if (err) throw err;
 
@@ -265,7 +265,7 @@ function delRole() {
         }
       ])
       .then(answer => {
-        connection.query(`DELETE FROM role WHERE ? `, {
+        connection.query(`DELETE FROM roles WHERE ? `, {
           title: answer.delRole
         });
         start();
@@ -311,7 +311,7 @@ function addEmp(data) {
     ])
     .then(function(res) {
       connection.query(
-        "INSERT INTO employee SET ?",
+        "INSERT INTO employees SET ?",
         {
           first_name: res.firstName,
           last_name: res.lastName,
@@ -334,7 +334,7 @@ function addEmp(data) {
 
 function viewEmp() {
   console.log("Employees: \n");
-  connection.query("SELECT * FROM employee", function(error, res) {
+  connection.query("SELECT * FROM employees", function(error, res) {
     console.table(res);
     start();
   });
@@ -361,7 +361,7 @@ function updateRole(data) {
 
     .then(function(res) {
       connection.query(
-        `UPDATE employee SET role_id = ${res.role} WHERE id = ${res.emp}`,
+        `UPDATE employees SET role_id = ${res.role} WHERE id = ${res.emp}`,
         function(error, res) {
           // console.log(error);
           if (error) throw error;
