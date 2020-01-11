@@ -198,7 +198,7 @@ function addRole(data) {
 
 // View Role
 function viewRole() {
-  let query = `SELECT title AS "Title" FROM role`;
+  let query = `SELECT title AS "Title" FROM roles`;
   connection.query(query, (err, results) => {
     if (err) throw err;
     console.log(" ");
